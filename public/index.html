@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>GCP Compute Inventory</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 960px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        color: #1a1a1a;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid #e2e2e2;
+        font-size: 0.9rem;
+      }
+      th {
+        color: #666;
+        font-weight: 600;
+      }
+      .status {
+        display: inline-block;
+        padding: 0.1rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
+      .status-running {
+        background: #e3f7e8;
+        color: #1a7f3c;
+      }
+      .status-stopped {
+        background: #f2f2f2;
+        color: #666;
+      }
+      .status-starting,
+      .status-stopping {
+        background: #fff4dd;
+        color: #8a5a00;
+      }
+      .status-unknown {
+        background: #fde8e8;
+        color: #a11;
+      }
+      #error {
+        display: none;
+        background: #fde8e8;
+        color: #7a1111;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        margin-top: 1rem;
+        white-space: pre-wrap;
+      }
+      #empty {
+        display: none;
+        color: #666;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GCP Compute Inventory</h1>
+    <p id="meta" style="color: #666; font-size: 0.9rem"></p>
+    <div id="error"></div>
+    <p id="empty">No VM instances found in this project.</p>
+    <table id="table" style="display: none">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Zone</th>
+          <th>Machine Type</th>
+          <th>Private IP</th>
+          <th>Public IP</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <script src="app.js"></script>
+  </body>
+</html>
