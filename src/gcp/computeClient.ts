@@ -21,7 +21,12 @@ export async function listAllInstances(
   const instances: CloudInstance[] = [];
 
   try {
-    const iterable = instancesClient.aggregatedListAsync({ project: projectId });
+    // autoPaginate:false silences a warning; the async iterator already
+    // handles paging page by page on its own (see the gax-nodejs auto-pagination note).
+    const iterable = instancesClient.aggregatedListAsync(
+      { project: projectId },
+      { autoPaginate: false },
+    );
 
     for await (const [, scopedList] of iterable) {
       for (const raw of scopedList.instances ?? []) {
