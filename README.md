@@ -9,13 +9,33 @@ and returns them in a provider-agnostic, normalized shape.
 src/
   server.ts          Express app, endpoints, centralized error handler
   errors.ts           AppError + mapping that turns GCP errors into actionable messages
+  errors.test.ts       Tests for errors.ts
   types.ts             Shared CloudInstance type (provider-agnostic)
   gcp/
     computeClient.ts   aggregatedList call via @google-cloud/compute
     normalize.ts        GCP Instance -> CloudInstance mapping
+    normalize.test.ts    Tests for normalize.ts
 public/
   index.html, app.js   Minimal client that displays results in a table
 ```
+
+### Tests
+
+`normalize.ts` and `errors.ts` are pure functions that never connect to GCP,
+so they can be tested without requiring an actual GCP connection. They're
+written with Vitest:
+
+```bash
+npm test
+```
+
+Coverage: that all of GCP's status values (`RUNNING`, `TERMINATED`, `STAGING`,
+etc.) are correctly mapped to the shared `status` field, that zone/region/
+machineType are correctly extracted from resource URLs, that missing fields
+(IP, label, creationTimestamp) fall back to `null`/empty values, and that
+every gRPC code in `errors.ts` (`UNAUTHENTICATED`, `PERMISSION_DENIED`,
+`NOT_FOUND`, `RESOURCE_EXHAUSTED`) as well as network/ADC errors are
+correctly translated into the right HTTP status and message.
 
 ### Endpoints
 
