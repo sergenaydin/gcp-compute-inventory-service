@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import path from "node:path";
-import { listAllInstances } from "./gcp/computeClient";
+import { getInstanceById, listAllInstances } from "./gcp/computeClient";
 import { AppError } from "./errors";
 
 const PROJECT_ID = process.env.GCP_PROJECT_ID;
@@ -27,6 +27,22 @@ app.get(
     try {
       const result = await listAllInstances(PROJECT_ID);
       res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+app.get(
+  "/api/instances/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const instance = await getInstanceById(PROJECT_ID, req.params.id);
+      if (!instance) {
+        res.status(404).json({ error: `No instance found with id "${req.params.id}".` });
+        return;
+      }
+      res.json(instance);
     } catch (err) {
       next(err);
     }

@@ -39,3 +39,17 @@ export async function listAllInstances(
 
   return { instances, count: instances.length, projectId };
 }
+
+/**
+ * Looks up a single instance by its numeric GCP instance ID. GCP's `get`
+ * API needs the zone up front, which the caller doesn't have, so this
+ * reuses the same aggregatedList call as listAllInstances and filters
+ * client-side — fine at this project's scale, not meant for large fleets.
+ */
+export async function getInstanceById(
+  projectId: string,
+  id: string,
+): Promise<CloudInstance | null> {
+  const { instances } = await listAllInstances(projectId);
+  return instances.find((instance) => instance.id === id) ?? null;
+}

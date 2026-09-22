@@ -39,10 +39,11 @@ correctly translated into the right HTTP status and message.
 
 ### Endpoints
 
-| Method | Path            | Description                                    |
-| ------ | --------------- | ----------------------------------------------- |
-| GET    | `/api/health`   | Whether the service is up                        |
-| GET    | `/api/instances`| Normalized VMs across all zones in the project    |
+| Method | Path                | Description                                          |
+| ------ | ------------------- | ------------------------------------------------------ |
+| GET    | `/api/health`       | Whether the service is up                                |
+| GET    | `/api/instances`    | Normalized VMs across all zones in the project            |
+| GET    | `/api/instances/:id`| A single instance by its GCP instance ID, or 404          |
 
 ### Normalized shape
 
