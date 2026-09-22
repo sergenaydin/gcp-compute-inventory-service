@@ -171,6 +171,8 @@ gcloud projects delete opsitex-gcp-case-sergen --quiet
 
 ## Running the app
 
+Requires Node.js >=20.13 (pinned in `.nvmrc`/`package.json#engines`; run `nvm use` if you use nvm).
+
 ```bash
 npm install
 cp .env.example .env

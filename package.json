@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A service that normalizes and serves a GCP Compute Engine VM inventory",
   "main": "dist/server.js",
+  "engines": {
+    "node": ">=20.13.0"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
