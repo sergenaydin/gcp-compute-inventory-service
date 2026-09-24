@@ -1,6 +1,5 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
-import path from "node:path";
 import { getInstanceById, listAllInstances } from "./gcp/computeClient";
 import { AppError } from "./errors";
 
@@ -15,7 +14,13 @@ if (!PROJECT_ID) {
 }
 
 const app = express();
-app.use(express.static(path.join(__dirname, "..", "public")));
+
+app.get("/", (_req, res) => {
+  res.json({
+    service: "gcp-compute-inventory-service",
+    endpoints: ["GET /api/health", "GET /api/instances", "GET /api/instances/:id"],
+  });
+});
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
