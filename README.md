@@ -15,9 +15,11 @@ src/
     computeClient.ts   aggregatedList call via @google-cloud/compute
     normalize.ts        GCP Instance -> CloudInstance mapping
     normalize.test.ts    Tests for normalize.ts
-public/
-  index.html, app.js   Minimal client that displays results in a table
 ```
+
+This repository is the API only. The web UI is a separate project,
+[`gcp-compute-inventory-ui`](https://github.com/sergenaydin/gcp-compute-inventory-ui) (React + Vite); the two
+are developed, run and deployed independently and only share the HTTP contract below.
 
 ### Tests
 
@@ -41,6 +43,7 @@ correctly translated into the right HTTP status and message.
 
 | Method | Path                | Description                                          |
 | ------ | ------------------- | ------------------------------------------------------ |
+| GET    | `/`                 | Service name and endpoint list                           |
 | GET    | `/api/health`       | Whether the service is up                                |
 | GET    | `/api/instances`    | Normalized VMs across all zones in the project            |
 | GET    | `/api/instances/:id`| A single instance by its GCP instance ID, or 404          |
@@ -180,10 +183,29 @@ cp .env.example .env
 # In .env, fill in GCP_PROJECT_ID and GOOGLE_APPLICATION_CREDENTIALS (the
 # full path to the key file from step 2).
 npm run dev
-# http://localhost:8080
+# API on http://localhost:8080  (try: curl localhost:8080/api/instances)
 ```
 
 `npm run build && npm start` for a production build.
+
+### Using it with the UI
+
+The UI lives in its own repository and runs separately (see its README):
+
+```bash
+# terminal 1: this API
+npm run dev
+
+# terminal 2: the UI (proxies /api to http://localhost:8080)
+cd ../gcp-compute-inventory-ui && npm install && npm run dev
+# http://localhost:5173
+```
+
+In development the UI's dev server proxies `/api`, so no CORS configuration is
+needed. If the UI is hosted on another origin (a static host, for example), set
+`CORS_ORIGIN` here to that origin (comma-separated for several) and build the UI
+with `VITE_API_BASE_URL` pointing at this API. Without `CORS_ORIGIN`, no CORS
+headers are sent.
 
 ## Identity and security
 
