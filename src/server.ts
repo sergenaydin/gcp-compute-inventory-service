@@ -1,4 +1,5 @@
 import "dotenv/config";
+import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import { getInstanceById, listAllInstances } from "./gcp/computeClient";
 import { AppError } from "./errors";
@@ -13,7 +14,18 @@ if (!PROJECT_ID) {
   );
 }
 
+// Only needed when a UI is hosted on another origin (a static host, for example);
+// the UI's dev server uses a proxy instead. Comma-separated, e.g. https://ui.example.com
+const allowedOrigins = (process.env.CORS_ORIGIN ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const app = express();
+
+if (allowedOrigins.length > 0) {
+  app.use("/api", cors({ origin: allowedOrigins, methods: ["GET"] }));
+}
 
 app.get("/", (_req, res) => {
   res.json({
